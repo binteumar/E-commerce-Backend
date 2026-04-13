@@ -1,0 +1,42 @@
+const { verifyAccessToken } = require("../Utils/authUtils.js");
+
+const authenticateUser = (req, res, next) => {
+  try {
+    // 1. Get token from header
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader) {
+      return res.status(401).json({
+        success: false,
+        message: "No token provided"
+      });
+    }
+
+    // 2. Format: Bearer TOKEN
+    const token = authHeader.split(" ")[1];
+
+    if (!token) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid token format"
+      });
+    }
+
+    // 3. Verify token
+    const decoded = verifyAccessToken(token);
+
+    // 4. Attach user to request
+    req.user = decoded;
+
+    // 5. Continue
+    next();
+
+  } catch (error) {
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized or token expired"
+    });
+  }
+};
+
+module.exports = authenticateUser;
