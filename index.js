@@ -9,7 +9,7 @@ app.use(cors())
 
 connectDB();
 
-app.use('/uploads', express.static('uploads'));
+// app.use('/uploads', express.static('uploads'));
 
 // Test API
 app.get("/api/test", (req, res) => {
